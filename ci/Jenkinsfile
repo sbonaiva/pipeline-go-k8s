@@ -13,18 +13,35 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: "${params.GIT_REPOSITORY}", branch: "${params.GIT_BRANCH}", credentialsId: "${params.GIT_CREDENTIALS}"
+                git url: "${params.GIT_REPOSITORY}",
+                    branch: "${params.GIT_BRANCH}", 
+                    credentialsId: "${params.GIT_CREDENTIALS}"
             }
         }
         stage('Compile') {
             steps {
-                sh 'go build'
+                sh 'go build ./...'
             }
         }
         stage('Test') {
             steps {
                 sh 'go test ./...'
             }
+        }
+        stage('Containerize') {
+            steps {
+                sh "docker build -t sbonaiva/app-go-k8s:${BUILD_NUMBER} -f build/Dockerfile ."
+            }
+        }
+        stage('Push') {
+            steps {
+                echo 'skip'
+            }
+        }
+    }
+    post {
+        always {
+            deleteDir()
         }
     }
 }
