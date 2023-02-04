@@ -28,14 +28,21 @@ pipeline {
                 sh 'go test ./...'
             }
         }
+        stage('Coverage') {
+            steps {
+                echo 'skip'
+            } 
+        }
         stage('Containerize') {
             steps {
-                sh "docker build -t sbonaiva/${params.GIT_REPOSITORY}:${BUILD_NUMBER} -f build/Dockerfile ."
+                dockerImage = docker.build("docker build -t sbonaiva/${params.GIT_REPOSITORY}:${BUILD_NUMBER} -f build/Dockerfile .")
             }
         }
         stage('Push') {
             steps {
-                echo 'skip'
+                withDockerRegistry([ credentialsId: "${params.DOCKER_CREDENTIALS}", url: "" ]) {
+                    dockerImage.push()
+                }
             }
         }
     }
