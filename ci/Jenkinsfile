@@ -37,13 +37,17 @@ pipeline {
         }
         stage('Containerize') {
             steps {
-                dockerImage = docker.build("docker build -t sbonaiva/${params.GIT_REPOSITORY}:${BUILD_NUMBER} -f build/Dockerfile .")
+                script {
+                    dockerImage = docker.build("sbonaiva/${params.GIT_REPOSITORY}:${BUILD_NUMBER}", "-f build/Dockerfile .")
+                }
             }
         }
         stage('Push') {
             steps {
-                withDockerRegistry([ credentialsId: "${params.DOCKER_CREDENTIALS}", url: "" ]) {
-                    dockerImage.push()
+                script {
+                    withDockerRegistry(credentialsId: "${params.DOCKER_CREDENTIALS}", url: "") {
+                        dockerImage.push()
+                    }
                 }
             }
         }
