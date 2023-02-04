@@ -3,6 +3,9 @@ pipeline {
     tools { 
         go '1.20'
     }
+    environment {
+        GO111MODULE = 'on'
+    }
     options {
         skipDefaultCheckout true
     }
@@ -13,14 +16,14 @@ pipeline {
                 git url: "${params.GIT_REPOSITORY}", branch: "${params.GIT_BRANCH}", credentialsId: "${params.GIT_CREDENTIALS}"
             }
         }
-        stage('Download Dependencies') {
+        stage('Compile') {
             steps {
-                sh "go mod download"
+                sh 'go build'
             }
         }
-        stage('Unit Tests') {
+        stage('Test') {
             steps {
-                sh "go test ./..."
+                sh 'go test ./...'
             }
         }
     }
