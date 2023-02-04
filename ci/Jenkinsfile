@@ -13,9 +13,14 @@ pipeline {
                 git url: "${params.GIT_REPOSITORY}", branch: "${params.GIT_BRANCH}", credentialsId: "${params.GIT_CREDENTIALS}"
             }
         }
+        stage('Download Dependencies') {
+            steps {
+                sh "go mod download"
+            }
+        }
         stage('Unit Tests') {
             steps {
-                sh "go version"
+                sh "go test ./..."
             }
         }
     }
