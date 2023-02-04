@@ -4,11 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git(
-                    url: "${params.GIT_REPOSITORY}"
-                    branch: "${params.GIT_BRANCH}"
-                    credentialsId: "${params.GIT_CREDENTIALS}"
-                ) 
+                git url: "${params.GIT_REPOSITORY}", branch: "${params.GIT_BRANCH}", credentialsId: "${params.GIT_CREDENTIALS}"
             }
         }
     }
