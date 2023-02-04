@@ -30,7 +30,7 @@ pipeline {
         }
         stage('Containerize') {
             steps {
-                sh "docker build -t sbonaiva/app-go-k8s:${BUILD_NUMBER} -f build/Dockerfile ."
+                sh "docker build -t sbonaiva/${params.GIT_REPOSITORY}:${BUILD_NUMBER} -f build/Dockerfile ."
             }
         }
         stage('Push') {
