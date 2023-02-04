@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools { 
+        go '1.19'
+    }
     options {
         skipDefaultCheckout true
     }
@@ -10,9 +13,9 @@ pipeline {
                 git url: "${params.GIT_REPOSITORY}", branch: "${params.GIT_BRANCH}", credentialsId: "${params.GIT_CREDENTIALS}"
             }
         }
-        stage('List') {
+        stage('Unit Tests') {
             steps {
-                sh "ls"
+                sh "go version"
             }
         }
     }
