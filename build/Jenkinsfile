@@ -2,7 +2,7 @@ def dockerImage
 
 pipeline {
     agent any
-    tools { 
+    tools {
         go '1.20'
     }
     environment {
@@ -48,6 +48,13 @@ pipeline {
                     withDockerRegistry(credentialsId: "${params.DOCKER_CREDENTIALS}", url: "") {
                         dockerImage.push()
                     }
+                }
+            }
+        }
+        stage('Tag') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: "${params.GIT_CREDENTIALS}", passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                    sh "git ls-remote"
                 }
             }
         }
