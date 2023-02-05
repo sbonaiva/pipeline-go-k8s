@@ -54,8 +54,6 @@ pipeline {
         stage('Tag') {
             steps {
                 withCredentials([gitUsernamePassword(credentialsId: "${params.GIT_CREDENTIALS}")]) {
-                    sh "git config user.name 'jenkins'"
-                    sh "git config user.email 'jenkins@github.com'"
                     sh "git tag ${BUILD_NUMBER}"
                     sh "git push origin ${BUILD_NUMBER}"
                 }
