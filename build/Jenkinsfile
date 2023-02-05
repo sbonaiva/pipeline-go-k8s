@@ -53,8 +53,12 @@ pipeline {
         }
         stage('Tag') {
             steps {
-                withCredentials([usernamePassword(credentialsId: "${params.GIT_CREDENTIALS}", passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                    sh "git ls-remote"
+                withCredentials([usernamePassword(
+                    credentialsId: "${params.GIT_CREDENTIALS}", 
+                    passwordVariable: 'GIT_PASSWORD', 
+                    usernameVariable: 'GIT_USERNAME')]) {
+                    sh "git tag ${BUILD_NUMBER}"
+                    sh "git push origin ${BUILD_NUMBER}"
                 }
             }
         }
