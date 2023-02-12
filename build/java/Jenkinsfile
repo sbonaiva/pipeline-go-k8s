@@ -2,12 +2,6 @@ def dockerImage
 
 pipeline {
     agent any
-    tools {
-        go '1.20'
-    }
-    environment {
-        GO111MODULE = 'on'
-    }
     options {
         skipDefaultCheckout true
     }
@@ -20,14 +14,9 @@ pipeline {
                     credentialsId: "${params.GIT_CREDENTIALS}"
             }
         }
-        stage('Compile') {
+        stage('Compile, Test and Packae') {
             steps {
-                sh 'go build ./...'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'go test ./...'
+                sh './gradlew clean build'
             }
         }
         stage('Coverage') {
@@ -38,7 +27,7 @@ pipeline {
         stage('Containerize') {
             steps {
                 script {
-                    dockerImage = docker.build("sbonaiva/${params.GIT_REPOSITORY}:${BUILD_NUMBER}", "-f build/Dockerfile .")
+                    dockerImage = docker.build("sbonaiva/${params.GIT_REPOSITORY}:${BUILD_NUMBER}")
                 }
             }
         }
